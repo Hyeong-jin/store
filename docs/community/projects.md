@@ -2,6 +2,7 @@
 
 ### Projects
 - [Angular 6 with NGXS and NX](https://xmlking.github.io/ngx-starter-kit/home)
+- [Angular 7, Angular Material and NGXS](https://github.com/adoi/Libnr)
 - [Ngxs-Pizza-Order](https://github.com/tommythongnguyen/Ngxs-Pizza-Order)
 - [Ngxs Todo](https://github.com/mailok/todo-ngxs)
 - [EL-3270 Electron IBM Terminal Emulator](https://github.com/mflorence99/el-3270)
@@ -17,6 +18,7 @@
 - [ngxs vs ngrx](https://github.com/codediodeio/ngrx-vs-ngxs)
 - [Ngxs Effects](https://github.com/hsdgit/State.Of.Angular/tree/effects)
 - [Reactive Programming with Observables & NGXS](https://github.com/kctang/reactive-with-ngxs)
+- [Port of NgRx Example App](https://github.com/eranshmil/ngxs-example-app)
 
 ### Media
 - [ngAir 153 - NGXS: A New State Management for Angular Apps with Austin McDaniel and Danny Blue](https://www.youtube.com/watch?v=rkn73khwfWU&feature=youtu.be)

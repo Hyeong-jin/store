@@ -3,11 +3,11 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@ngxs/*": ["../builds/*"]
+      "@ngxs/*": ["../@ngxs/*"]
     },
     "outDir": "./out-tsc/app",
     "module": "es2015",
-    "types": []
+    "types": ["node"]
   },
   "include": ["**/*.ts", "./polyfills.ts"],
   "exclude": ["test.integration.ts", "**/*.spec.ts"]
