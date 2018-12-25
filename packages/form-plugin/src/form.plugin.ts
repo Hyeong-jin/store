@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { NgxsPlugin, setValue, getActionTypeFromInstance } from '@ngxs/store';
+import {
+  NgxsPlugin,
+  setValue,
+  getActionTypeFromInstance,
+  NgxsNextPluginFn
+} from '@ngxs/store';
 import {
   UpdateForm,
   UpdateFormDirty,
@@ -16,7 +21,7 @@ import {
 export class NgxsFormPlugin implements NgxsPlugin {
   constructor() {}
 
-  handle(state, event, next) {
+  handle(state: any, event: any, next: NgxsNextPluginFn) {
     const type = getActionTypeFromInstance(event);
 
     let nextState = state;

@@ -18,12 +18,18 @@ export class WebSocketHandler {
     socket: WebSocketSubject,
     @Inject(NGXS_WEBSOCKET_OPTIONS) config: NgxsWebsocketPluginOptions
   ) {
-    actions.pipe(ofActionDispatched(ConnectWebSocket)).subscribe(event => socket.connect(event.payload));
-    actions.pipe(ofActionDispatched(DisconnectWebSocket)).subscribe(event => socket.disconnect());
-    actions.pipe(ofActionDispatched(SendWebSocketMessage)).subscribe(({ payload }) => socket.send(payload));
+    actions
+      .pipe(ofActionDispatched(ConnectWebSocket))
+      .subscribe(event => socket.connect(event.payload));
+    actions
+      .pipe(ofActionDispatched(DisconnectWebSocket))
+      .subscribe(event => socket.disconnect());
+    actions
+      .pipe(ofActionDispatched(SendWebSocketMessage))
+      .subscribe(({ payload }) => socket.send(payload));
     socket.subscribe(
       msg => {
-        const type = getValue(msg, config.typeKey);
+        const type = getValue(msg, config.typeKey!);
         if (!type) {
           throw new Error(`Type ${type} not found on message`);
         }

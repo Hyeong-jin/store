@@ -13,9 +13,9 @@ export const enum ActionStatus {
   Errored = 'ERRORED'
 }
 
-export interface ActionContext {
+export interface ActionContext<T = any> {
   status: ActionStatus;
-  action: any;
+  action: T;
   error?: Error;
 }
 
@@ -40,7 +40,7 @@ export class OrderedSubject<T> extends Subject<T> {
 
   next(value?: T): void {
     if (this._busyPushingNext) {
-      this._itemQueue.unshift(value);
+      this._itemQueue.unshift(value!);
       return;
     }
     this._busyPushingNext = true;
@@ -70,7 +70,11 @@ export class Actions extends Observable<any> {
     super(observer => {
       actions$
         .pipe(enterZone(ngZone))
-        .subscribe(res => observer.next(res), err => observer.error(err), () => observer.complete());
+        .subscribe(
+          res => observer.next(res),
+          err => observer.error(err),
+          () => observer.complete()
+        );
     });
   }
 }

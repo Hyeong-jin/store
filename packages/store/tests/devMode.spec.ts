@@ -39,8 +39,8 @@ describe('Development Mode', () => {
         imports: [NgxsModule.forRoot([MyStore], { developmentMode: false })]
       });
 
-      const store = <Store>TestBed.get(Store);
-      const observedCallbacks = [];
+      const store: Store = TestBed.get(Store);
+      const observedCallbacks: string[] = [];
 
       store.dispatch(new Increment()).subscribe({
         next: () => observedCallbacks.push('next'),
@@ -58,7 +58,10 @@ describe('Development Mode', () => {
       })
       class MyStore {
         @Action(Increment)
-        mutatingIncrement({ getState, setState }: StateContext<StateModel>, { amount }: Increment) {
+        mutatingIncrement(
+          { getState, setState }: StateContext<StateModel>,
+          { amount }: Increment
+        ) {
           const state = getState();
           state.count = Number(getState().count) + amount;
           setState(state);
@@ -70,8 +73,8 @@ describe('Development Mode', () => {
         providers: [{ provide: ErrorHandler, useClass: NoopErrorHandler }]
       });
 
-      const store = <Store>TestBed.get(Store);
-      const observedCallbacks = [];
+      const store: Store = TestBed.get(Store);
+      const observedCallbacks: string[] = [];
 
       store.dispatch(new Increment()).subscribe({
         next: () => observedCallbacks.push('next'),
@@ -100,8 +103,8 @@ describe('Development Mode', () => {
         imports: [NgxsModule.forRoot([MyStore], { developmentMode: true })]
       });
 
-      const store = <Store>TestBed.get(Store);
-      const observedCallbacks = [];
+      const store: Store = TestBed.get(Store);
+      const observedCallbacks: string[] = [];
 
       store.dispatch(new Increment()).subscribe({
         next: () => observedCallbacks.push('next'),
@@ -126,7 +129,7 @@ describe('Development Mode', () => {
         }
       }
 
-      const observedErrors = [];
+      const observedErrors: string[] = [];
       @Injectable()
       class CustomErrorHandler implements ErrorHandler {
         handleError(error: any) {
@@ -165,7 +168,7 @@ describe('Development Mode', () => {
         }
       }
 
-      const observedErrors = [];
+      const observedErrors: string[] = [];
       @Injectable()
       class CustomErrorHandler implements ErrorHandler {
         handleError(error: any) {
@@ -174,7 +177,10 @@ describe('Development Mode', () => {
       }
 
       TestBed.configureTestingModule({
-        imports: [NgxsModule.forRoot([], { developmentMode: true }), NgxsModule.forFeature([MyStore])],
+        imports: [
+          NgxsModule.forRoot([], { developmentMode: true }),
+          NgxsModule.forFeature([MyStore])
+        ],
         providers: [
           {
             provide: ErrorHandler,
@@ -196,7 +202,10 @@ describe('Development Mode', () => {
       })
       class MyStore {
         @Action(Increment)
-        mutatingIncrement({ getState, setState }: StateContext<StateModel>, { amount }: Increment) {
+        mutatingIncrement(
+          { getState, setState }: StateContext<StateModel>,
+          { amount }: Increment
+        ) {
           const state = getState();
           state.count = Number(getState().count) + amount;
           setState(state);
@@ -208,8 +217,8 @@ describe('Development Mode', () => {
         providers: [{ provide: ErrorHandler, useClass: NoopErrorHandler }]
       });
 
-      const store = <Store>TestBed.get(Store);
-      const observedCallbacks = [];
+      const store: Store = TestBed.get(Store);
+      const observedCallbacks: string[] = [];
 
       store.dispatch(new Increment()).subscribe({
         next: () => observedCallbacks.push('next'),
@@ -233,12 +242,15 @@ describe('Development Mode', () => {
       })
       class MyStore {
         @Action(Reset)
-        reset({ setState }) {
+        reset({ setState }: StateContext<StateModel>) {
           setState({ count: 0 });
         }
 
         @Action(Increment)
-        mutatingIncrement({ getState, setState }: StateContext<StateModel>, { amount }: Increment) {
+        mutatingIncrement(
+          { getState, setState }: StateContext<StateModel>,
+          { amount }: Increment
+        ) {
           const state = getState();
           state.count = Number(getState().count) + amount;
           setState(state);
@@ -250,8 +262,8 @@ describe('Development Mode', () => {
         providers: [{ provide: ErrorHandler, useClass: NoopErrorHandler }]
       });
 
-      const store = <Store>TestBed.get(Store);
-      const observedCallbacks = [];
+      const store: Store = TestBed.get(Store);
+      const observedCallbacks: string[] = [];
 
       store.dispatch(new Reset());
       store.dispatch(new Increment()).subscribe({
@@ -282,9 +294,10 @@ describe('Development Mode', () => {
         providers: [{ provide: ErrorHandler, useClass: NoopErrorHandler }]
       });
 
-      const store = <Store>TestBed.get(Store);
+      const store: Store = TestBed.get(Store);
 
-      store.select(MyStore).subscribe((state: StateModel) => {
+      // todo: remove any
+      store.select<StateModel>(<any>MyStore).subscribe((state: StateModel) => {
         try {
           state.count++;
         } catch (error) {
@@ -312,7 +325,7 @@ describe('Development Mode', () => {
         providers: [{ provide: ErrorHandler, useClass: NoopErrorHandler }]
       });
 
-      const store = <Store>TestBed.get(Store);
+      const store: Store = TestBed.get(Store);
 
       store.select(MyStore.getCounterModel).subscribe((state: StateModel) => {
         try {
@@ -337,7 +350,7 @@ describe('Development Mode', () => {
         providers: [{ provide: ErrorHandler, useClass: NoopErrorHandler }]
       });
 
-      const store = <Store>TestBed.get(Store);
+      const store: Store = TestBed.get(Store);
 
       const state = store.selectSnapshot<StateModel>(appState => appState.counter);
       try {
@@ -356,7 +369,10 @@ describe('Development Mode', () => {
       })
       class MyStore {
         @Action(Increment)
-        mutatingIncrement({ getState, setState }: StateContext<StateModel>, action: Increment) {
+        mutatingIncrement(
+          { getState, setState }: StateContext<StateModel>,
+          action: Increment
+        ) {
           action.amount++;
           setState({ count: Number(getState().count) + action.amount });
         }
@@ -367,8 +383,8 @@ describe('Development Mode', () => {
         providers: [{ provide: ErrorHandler, useClass: NoopErrorHandler }]
       });
 
-      const store = <Store>TestBed.get(Store);
-      const observedCallbacks = [];
+      const store: Store = TestBed.get(Store);
+      const observedCallbacks: string[] = [];
 
       store.dispatch(new Increment()).subscribe({
         next: () => observedCallbacks.push('next'),
@@ -397,7 +413,10 @@ describe('Development Mode', () => {
         }
 
         @Action(Increment)
-        mutatingIncrement({ getState, setState }: StateContext<StateModel>, action: Increment) {
+        mutatingIncrement(
+          { getState, setState }: StateContext<StateModel>,
+          action: Increment
+        ) {
           action.amount++;
           setState({ count: Number(getState().count) + action.amount });
         }
@@ -408,8 +427,8 @@ describe('Development Mode', () => {
         providers: [{ provide: ErrorHandler, useClass: NoopErrorHandler }]
       });
 
-      const store = <Store>TestBed.get(Store);
-      const observedCallbacks = [];
+      const store: Store = TestBed.get(Store);
+      const observedCallbacks: string[] = [];
 
       store.dispatch(new Start()).subscribe({
         next: () => observedCallbacks.push('next'),

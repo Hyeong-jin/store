@@ -1,4 +1,5 @@
-import { Injectable, NgZone } from '@angular/core';
+// tslint:disable:unified-signatures
+import { Injectable, NgZone, Type } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { catchError, distinctUntilChanged, map, take } from 'rxjs/operators';
 
@@ -26,7 +27,7 @@ export class Store {
    * Selects a slice of data from the store.
    */
   select<T>(selector: (state: any, ...states: any[]) => T): Observable<T>;
-  select(selector: string | any): Observable<any>;
+  select<T = any>(selector: string | Type<unknown>): Observable<T>;
   select(selector: any): Observable<any> {
     const selectorFn = getSelectorFn(selector);
     return this._stateStream.pipe(
@@ -48,8 +49,9 @@ export class Store {
   /**
    * Select one slice of data from the store.
    */
+
   selectOnce<T>(selector: (state: any, ...states: any[]) => T): Observable<T>;
-  selectOnce(selector: string | any): Observable<any>;
+  selectOnce<T = any>(selector: string | Type<unknown>): Observable<T>;
   selectOnce(selector: any): Observable<any> {
     return this.select(selector).pipe(take(1));
   }
@@ -58,7 +60,7 @@ export class Store {
    * Select a snapshot from the state.
    */
   selectSnapshot<T>(selector: (state: any, ...states: any[]) => T): T;
-  selectSnapshot(selector: string | any): any;
+  selectSnapshot<T = any>(selector: string | Type<unknown>): T;
   selectSnapshot(selector: any): any {
     const selectorFn = getSelectorFn(selector);
     return selectorFn(this._stateStream.getValue());
@@ -67,7 +69,7 @@ export class Store {
   /**
    * Allow the user to subscribe to the root of the state
    */
-  subscribe(fn?: any): Subscription {
+  subscribe(fn?: (value: any) => void): Subscription {
     return this._stateStream.pipe(enterZone(this._ngZone)).subscribe(fn);
   }
 

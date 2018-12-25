@@ -21,16 +21,17 @@ export class SelectFactory {
 /**
  * Decorator for selecting a slice of state from the store.
  */
-export function Select(selectorOrFeature?, ...paths: string[]) {
+export function Select(selectorOrFeature?: any, ...paths: string[]) {
   return function(target: any, name: string) {
     const selectorFnName = '__' + name + '__selector';
 
     if (!selectorOrFeature) {
       // if foo$ => make it just foo
-      selectorOrFeature = name.lastIndexOf('$') === name.length - 1 ? name.substring(0, name.length - 1) : name;
+      selectorOrFeature =
+        name.lastIndexOf('$') === name.length - 1 ? name.substring(0, name.length - 1) : name;
     }
 
-    const createSelect = fn => {
+    const createSelect = (fn: any) => {
       const store = SelectFactory.store;
 
       if (!store) {
@@ -43,18 +44,22 @@ export function Select(selectorOrFeature?, ...paths: string[]) {
     const createSelector = () => {
       const config = SelectFactory.config;
       if (typeof selectorOrFeature === 'string') {
-        const propsArray = paths.length ? [selectorOrFeature, ...paths] : selectorOrFeature.split('.');
+        const propsArray = paths.length
+          ? [selectorOrFeature, ...paths]
+          : selectorOrFeature.split('.');
 
-        return propGetter(propsArray, config);
+        return propGetter(propsArray, config!);
       } else if (selectorOrFeature[META_KEY] && selectorOrFeature[META_KEY].path) {
-        return propGetter(selectorOrFeature[META_KEY].path.split('.'), config);
+        return propGetter(selectorOrFeature[META_KEY].path.split('.'), config!);
       } else {
         return selectorOrFeature;
       }
     };
 
     if (target[selectorFnName]) {
-      throw new Error('You cannot use @Select decorator and a ' + selectorFnName + ' property.');
+      throw new Error(
+        'You cannot use @Select decorator and a ' + selectorFnName + ' property.'
+      );
     }
 
     if (delete target[name]) {
@@ -66,7 +71,10 @@ export function Select(selectorOrFeature?, ...paths: string[]) {
 
       Object.defineProperty(target, name, {
         get: function() {
-          return this[selectorFnName] || (this[selectorFnName] = createSelect.apply(this, [createSelector()]));
+          return (
+            this[selectorFnName] ||
+            (this[selectorFnName] = createSelect.apply(this, [createSelector()]))
+          );
         },
         enumerable: true,
         configurable: true

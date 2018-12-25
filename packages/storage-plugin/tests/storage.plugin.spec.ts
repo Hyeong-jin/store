@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { NgxsModule, State, Store, Action } from '@ngxs/store';
 
 import { NgxsStoragePluginModule, StorageOption, StorageEngine, STORAGE_ENGINE } from '../';
+import { StateContext } from '@ngxs/store';
 
 describe('NgxsStoragePlugin', () => {
   class Increment {
@@ -23,14 +24,14 @@ describe('NgxsStoragePlugin', () => {
   })
   class MyStore {
     @Action(Increment)
-    increment({ getState, setState }) {
+    increment({ getState, setState }: StateContext<StateModel>) {
       setState({
         count: Number(getState().count) + 1
       });
     }
 
     @Action(Decrement)
-    decrement({ getState, setState }) {
+    decrement({ getState, setState }: StateContext<StateModel>) {
       setState({
         count: Number(getState().count) - 1
       });
@@ -55,10 +56,10 @@ describe('NgxsStoragePlugin', () => {
       imports: [NgxsModule.forRoot([MyStore]), NgxsStoragePluginModule.forRoot()]
     });
 
-    const store = TestBed.get(Store);
+    const store: Store = TestBed.get(Store);
 
     store
-      .select(state => state.counter)
+      .select((state: any) => state.counter)
       .subscribe((state: StateModel) => {
         expect(state.count).toBe(100);
       });
@@ -71,7 +72,7 @@ describe('NgxsStoragePlugin', () => {
       imports: [NgxsModule.forRoot([MyStore]), NgxsStoragePluginModule.forRoot()]
     });
 
-    const store = TestBed.get(Store);
+    const store: Store = TestBed.get(Store);
 
     store.dispatch(new Increment());
     store.dispatch(new Increment());
@@ -80,12 +81,73 @@ describe('NgxsStoragePlugin', () => {
     store.dispatch(new Increment());
 
     store
-      .select(state => state.counter)
+      .select((state: any) => state.counter)
       .subscribe((state: StateModel) => {
         expect(state.count).toBe(105);
 
-        expect(localStorage.getItem('@@STATE')).toBe(JSON.stringify({ counter: { count: 105 } }));
+        expect(localStorage.getItem('@@STATE')).toBe(
+          JSON.stringify({ counter: { count: 105 } })
+        );
       });
+  });
+
+  describe('when blank values are returned from localstorage', () => {
+    it('should use default data if null retrieved from localstorage', () => {
+      localStorage.setItem('@@STATE', <any>null);
+
+      @State<StateModel>({ name: 'counter', defaults: { count: 123 } })
+      class TestStore {}
+
+      TestBed.configureTestingModule({
+        imports: [NgxsModule.forRoot([TestStore]), NgxsStoragePluginModule.forRoot()]
+      });
+
+      const store = TestBed.get(Store);
+
+      store
+        .select((state: any) => state.counter)
+        .subscribe((state: StateModel) => {
+          expect(state.count).toBe(123);
+        });
+    });
+
+    it('should use default data if undefined retrieved from localstorage', () => {
+      localStorage.setItem('@@STATE', <any>undefined);
+
+      @State<StateModel>({ name: 'counter', defaults: { count: 123 } })
+      class TestStore {}
+
+      TestBed.configureTestingModule({
+        imports: [NgxsModule.forRoot([TestStore]), NgxsStoragePluginModule.forRoot()]
+      });
+
+      const store = TestBed.get(Store);
+
+      store
+        .select((state: any) => state.counter)
+        .subscribe((state: StateModel) => {
+          expect(state.count).toBe(123);
+        });
+    });
+
+    it(`should use default data if the string 'undefined' retrieved from localstorage`, () => {
+      localStorage.setItem('@@STATE', 'undefined');
+
+      @State<StateModel>({ name: 'testStore', defaults: { count: 123 } })
+      class TestStore {}
+
+      TestBed.configureTestingModule({
+        imports: [NgxsModule.forRoot([TestStore]), NgxsStoragePluginModule.forRoot()]
+      });
+
+      const store = TestBed.get(Store);
+
+      store
+        .select((state: any) => state.counter)
+        .subscribe((state: StateModel) => {
+          expect(state.count).toBe(123);
+        });
+    });
   });
 
   it('should migrate global localstorage', () => {
@@ -100,7 +162,7 @@ describe('NgxsStoragePlugin', () => {
             {
               version: 1,
               versionKey: 'counter.version',
-              migrate: state => {
+              migrate: (state: any) => {
                 state.counter = {
                   counts: state.counter.count,
                   version: 2
@@ -113,12 +175,14 @@ describe('NgxsStoragePlugin', () => {
       ]
     });
 
-    const store = TestBed.get(Store);
+    const store: Store = TestBed.get(Store);
 
     store
-      .select(state => state.counter)
+      .select((state: any) => state.counter)
       .subscribe((state: StateModel) => {
-        expect(localStorage.getItem('@@STATE')).toBe(JSON.stringify({ counter: { counts: 100, version: 2 } }));
+        expect(localStorage.getItem('@@STATE')).toBe(
+          JSON.stringify({ counter: { counts: 100, version: 2 } })
+        );
       });
   });
 
@@ -136,7 +200,7 @@ describe('NgxsStoragePlugin', () => {
               version: 1,
               key: 'counter',
               versionKey: 'version',
-              migrate: state => {
+              migrate: (state: any) => {
                 state = {
                   counts: state.count,
                   version: 2
@@ -149,12 +213,14 @@ describe('NgxsStoragePlugin', () => {
       ]
     });
 
-    const store = TestBed.get(Store);
+    const store: Store = TestBed.get(Store);
 
     store
-      .select(state => state.counter)
+      .select((state: any) => state.counter)
       .subscribe((state: StateModel) => {
-        expect(localStorage.getItem('counter')).toBe(JSON.stringify({ counts: 100, version: 2 }));
+        expect(localStorage.getItem('counter')).toBe(
+          JSON.stringify({ counts: 100, version: 2 })
+        );
       });
   });
 
@@ -170,10 +236,10 @@ describe('NgxsStoragePlugin', () => {
       ]
     });
 
-    const store = TestBed.get(Store);
+    const store: Store = TestBed.get(Store);
 
     store
-      .select(state => state.counter)
+      .select((state: any) => state.counter)
       .subscribe((state: StateModel) => {
         expect(state.count).toBe(100);
       });
@@ -191,7 +257,7 @@ describe('NgxsStoragePlugin', () => {
       ]
     });
 
-    const store = TestBed.get(Store);
+    const store: Store = TestBed.get(Store);
 
     store.dispatch(new Increment());
     store.dispatch(new Increment());
@@ -200,11 +266,13 @@ describe('NgxsStoragePlugin', () => {
     store.dispatch(new Increment());
 
     store
-      .select(state => state.counter)
+      .select((state: any) => state.counter)
       .subscribe((state: StateModel) => {
         expect(state.count).toBe(105);
 
-        expect(sessionStorage.getItem('@@STATE')).toBe(JSON.stringify({ counter: { count: 105 } }));
+        expect(sessionStorage.getItem('@@STATE')).toBe(
+          JSON.stringify({ counter: { count: 105 } })
+        );
       });
   });
 
@@ -222,15 +290,15 @@ describe('NgxsStoragePlugin', () => {
         return Object.keys(CustomStorage.Storage).length;
       }
 
-      getItem(key) {
+      getItem(key: string) {
         return CustomStorage.Storage[key];
       }
 
-      setItem(key, val) {
+      setItem(key: string, val: any) {
         CustomStorage.Storage[key] = val;
       }
 
-      removeItem(key) {
+      removeItem(key: string) {
         delete CustomStorage.Storage[key];
       }
 
@@ -238,7 +306,7 @@ describe('NgxsStoragePlugin', () => {
         CustomStorage.Storage = {};
       }
 
-      key(index) {
+      key(index: number) {
         return Object.keys(CustomStorage.Storage)[index];
       }
     }
@@ -263,7 +331,7 @@ describe('NgxsStoragePlugin', () => {
       ]
     });
 
-    const store = TestBed.get(Store);
+    const store: Store = TestBed.get(Store);
 
     store.dispatch(new Increment());
     store.dispatch(new Increment());
@@ -272,7 +340,7 @@ describe('NgxsStoragePlugin', () => {
     store.dispatch(new Increment());
 
     store
-      .select(state => state.counter)
+      .select((state: any) => state.counter)
       .subscribe((state: StateModel) => {
         expect(state.count).toBe(105);
 
@@ -291,10 +359,10 @@ describe('NgxsStoragePlugin', () => {
       ]
     });
 
-    const store = TestBed.get(Store);
+    const store: Store = TestBed.get(Store);
 
     store
-      .select(state => state)
+      .select((state: any) => state)
       .subscribe((state: { counter: StateModel; lazyLoaded: StateModel }) => {
         expect(state.lazyLoaded).toBeDefined();
       });

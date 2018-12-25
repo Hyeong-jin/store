@@ -1,12 +1,38 @@
-# DEV version (to become [3.4.0](https://github.com/ngxs/store/milestone/7))
+# [DEV version](https://www.npmjs.com/package/@ngxs/store/v/dev) (to become [3.4.0](https://github.com/ngxs/store/milestone/6))
 
-* ...
+```bash
+$ npm install @ngxs/store@dev
+```
+
+* Feature: Support server-side rendering [#698](https://github.com/ngxs/store/pull/698)
+* Feature: Enable state operator extensibility [#635](https://github.com/ngxs/store/pull/635)
+* Feature: Add `ofActionCompleted` action handler [#712](https://github.com/ngxs/store/pull/712)
+* Feature: Add `Hot Module Replacement` plugin for manage states [#707](https://github.com/ngxs/store/pull/707)
+
+# 3.3.4 2018-12-20
+* Fix: Remove ref to TestBed to reduce bundle size [#725](https://github.com/ngxs/store/pull/725)
+
+# 3.3.3 2018-12-16
+* Fix: Silence console hints in tests [#706](https://github.com/ngxs/store/pull/706)
+
+# 3.3.2 2018-12-04
+* Fix: Remove compromised dependencies [#684](https://github.com/ngxs/store/pull/684)
+* Fix: Add helper for enable development mode [#674](https://github.com/ngxs/store/pull/674)
+* Fix: Support underscore in state name [#663](https://github.com/ngxs/store/pull/663)
+
+# 3.3.1 2018-11-24
+* Fix: Storage Plugin should handle 'undefined' string [#671](https://github.com/ngxs/store/pull/671)
+* Feature: NGXS [Schematics](https://github.com/ngxs/schematics/pull/3)
+
+## NGXS-Labs
+
+* Feature: Announced [immer-adapter](https://github.com/ngxs-labs/immer-adapter)
+* Feature: Announced [dispatch-decorator](https://github.com/ngxs-labs/dispatch-decorator)
 
 # 3.3.0 2018-11-19
 
 * Feature: Support Angular 7, TypeScript 3.1 [#615](https://github.com/ngxs/store/issues/615)
-* Feature: [Emitter](https://github.com/ngxs-labs/emitter) plugin (allows you to get rid of actions) [#543](https://github.com/ngxs/store/issues/543)
-* Feature: Announced [NGXS Labs](https://ngxs.gitbook.io/ngxs/ngxs-labs/intro)
+(https://github.com/ngxs/store/issues/543)
 * Feature: Add [CLI](https://github.com/ngxs/cli) for generate store [#520](https://github.com/ngxs/store/pull/520)
 * Feature: Add strictContentSecurityPolicy compatibility rule [#569](https://github.com/ngxs/store/pull/569)
 * Feature: Devtools plugin support for 'IMPORT_STATE' [#507](https://github.com/ngxs/store/pull/507)
@@ -16,6 +42,11 @@
 * Fix: Storage Plugin should handle undefined [#538](https://github.com/ngxs/store/pull/538)
 * Fix: Expose ofActionCanceled function [#531](https://github.com/ngxs/store/pull/531)
 * Fix: Expose Websocket Plugin WebsocketMessageError action [#504](https://github.com/ngxs/store/pull/504)
+
+## NGXS-Labs
+
+* Feature: [Emitter](https://github.com/ngxs-labs/emitter) plugin (allows you to get rid of actions) [#543]
+* Feature: Announced [NGXS Labs](https://ngxs.gitbook.io/ngxs/ngxs-labs/intro)
 
 # 3.2.0 2018-07-15
 
